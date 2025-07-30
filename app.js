@@ -3,6 +3,7 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const connectDB = require('./config/database');
 const errorHandler = require('./middleware/errorHandler');
+const { swaggerUi, specs } = require('./config/swagger');
 
 dotenv.config();
 
@@ -20,8 +21,13 @@ app.use('/api/links', require('./routes/links'));
 app.use('/u', require('./routes/user'));
 app.use('/api', require('./routes/public'));
 
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+
 app.get('/', (req, res) => {
-  res.json({ message: 'LinkDay API is running!' });
+  res.json({ 
+    message: 'LinkDay API is running!',
+    documentation: '/api-docs'
+  });
 });
 
 app.use(errorHandler);
